@@ -3,6 +3,8 @@ import Home from './HomeComponent';
 import { View, Platform } from 'react-native';
 import Menu from './MenuComponent';
 import Dishdetail from './DishdetailComponent';
+import Contact from './ContactComponent';
+import About from './AboutComponent';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -62,6 +64,54 @@ function HomeNavigatorScreen({ navigation }) {
 }
 
 
+const ContactNavigator = createStackNavigator();
+
+function ContactNavigatorScreen({ navigation }) {
+  return(
+      <ContactNavigator.Navigator
+          screenOptions={{
+              headerStyle: {
+                  backgroundColor: "#512DA8"
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                  color: "#fff"            
+              }
+          }}
+      >
+          <ContactNavigator.Screen
+              name="Contact"
+              component={Contact}
+          />        
+      </ContactNavigator.Navigator>
+  );
+}
+
+
+const AboutNavigator = createStackNavigator();
+
+function AboutNavigatorScreen({ navigation }) {
+  return(
+      <AboutNavigator.Navigator
+          screenOptions={{
+              headerStyle: {
+                  backgroundColor: "#512DA8"
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                  color: "#fff"            
+              }
+          }}
+      >
+          <AboutNavigator.Screen
+              name="About"
+              component={About}
+          />        
+      </AboutNavigator.Navigator>
+  );
+}
+
+
 const Drawer = createDrawerNavigator();
 
 function MainNavigator() {
@@ -73,7 +123,9 @@ function MainNavigator() {
           backgroundColor: '#D1C4E9'
         }} >
           <Drawer.Screen name="Home" component={HomeNavigatorScreen} />
+          <Drawer.Screen name="About" component={AboutNavigatorScreen} />
           <Drawer.Screen name="Menu" component={MenuNavigatorScreen} />
+          <Drawer.Screen name="Contact" component={ContactNavigatorScreen} />
       </Drawer.Navigator>
 
   );
