@@ -56,11 +56,13 @@ class About extends Component {
                 <Card>
                     <Card.Title>Corporate Leadership</Card.Title>
                     <Card.Divider/>
+                    <View>
                     <FlatList 
                         data={this.state.leaders} 
                         renderItem={renderMenuItem}
                         keyExtractor={item => item.id.toString()}
                     />
+                    </View>
                 </Card>
                 
             </ScrollView>
