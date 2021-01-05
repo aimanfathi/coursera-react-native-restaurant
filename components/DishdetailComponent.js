@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text , ScrollView, FlatList } from 'react-native';
-import { Card , Icon } from 'react-native-elements';
+import { Card , Icon, Rating } from 'react-native-elements';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 
@@ -36,7 +36,8 @@ function RenderComment(props){
         return(
             <View key={index} style={{margin: 10}}>
                 <Text style={{fontSize: 14}}>{item.comment}</Text>
-                <Text style={{fontSize: 12}}>{item.rating} Stars</Text>
+                {/*<Text style={{fontSize: 12}}>{item.rating} Stars</Text>*/}
+                <Rating imageSize={15} readonly startingValue={item.rating} style={{ marginRight: 'auto'}} />
                 <Text style={{fontSize: 12}}>{'-- ' + item.author + ', ' + item.date}</Text>
             </View>
         );
