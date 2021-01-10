@@ -156,6 +156,12 @@ export const addFavorite = (dishId) => ({
 });
 
 
+export const deleteFavorite = (dishId) => ({
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: dishId
+});
+
+
 export const postComment = (dishId, rating, author, comment) => (dispatch) => {
     const newComment = {
         id: Math.floor((Math.random() * 100) + 20),
