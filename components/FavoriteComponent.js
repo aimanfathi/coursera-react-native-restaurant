@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text , FlatList } from 'react-native';
 import { ListItem , Avatar } from 'react-native-elements';
+import { TextInput } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
@@ -28,7 +29,7 @@ class Favorites extends Component {
                     bottomDivider
                     onPress={() => navigate('Dishdetail', { dishId: item.id})}
                 >
-                    <Avatar source={{uri: baseUrl + item.image}} />
+                    <Avatar rounded source={{uri: baseUrl + item.image}} />
                     <ListItem.Content>
                         <ListItem.Title>{item.name}</ListItem.Title>
                         <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
@@ -36,6 +37,28 @@ class Favorites extends Component {
                 </ListItem>
             );
         };
+
+        if (this.props.dishes.isLoading) {
+            return(
+                <Loading />
+            );
+        }
+        else if (this.props.dishes.errMess) {
+            return(
+                <View>
+                    <Text>{this.props.dishes.errMess}</Text>
+                </View>
+            );
+        }
+        else {
+            return(
+                <FlatList
+                    data={this.props.dishes.dishes.filter(dish => this.props.favorites.some(el => el === dish.id))}
+                    renderItem={renderMenuItem}
+                    keyExtractor={item => item.id.toString()}
+                />
+            );
+        }
     };
 }
 

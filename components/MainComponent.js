@@ -6,6 +6,7 @@ import Dishdetail from './DishdetailComponent';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 import Reservation from './ReservationComponent';
+import Favorites from './FavoriteComponent';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator , DrawerContentScrollView , DrawerItemList  } from '@react-navigation/drawer';
@@ -184,6 +185,36 @@ function ReservationNavigatorScreen({ navigation }) {
 }
 
 
+const FavoritesNavigator = createStackNavigator();
+
+function FavoritesNavigatorScreen({ navigation }) {
+  return(
+      <FavoritesNavigator.Navigator
+          screenOptions={{
+              headerStyle: {
+                  backgroundColor: "#512DA8"
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                  color: "#fff"            
+              }
+          }}
+      >
+          <FavoritesNavigator.Screen
+              name="My Favorites"
+              component={Favorites}
+              options={{
+                headerLeft: ({ navigation }) => (
+                    <Icon name='menu' size={24} color='white'
+                        onPress={() => navigation.toggleDrawer()} />
+                ),
+              }} 
+          />        
+      </FavoritesNavigator.Navigator>
+  );
+}
+
+
 function CustomDrawerContentComponent(props) {
     return (
         <DrawerContentScrollView {...props}
@@ -243,6 +274,13 @@ function MainNavigator() {
             options={{
                 drawerIcon: ({color}) => (
                     <Icon name='address-card' size={24} type='font-awesome' color={color}/>
+                )
+            }}
+          />
+          <Drawer.Screen name="My Favorites" component={FavoritesNavigatorScreen} 
+            options={{
+                drawerIcon: ({color}) => (
+                    <Icon name='heart' size={24} type='font-awesome' color={color}/>
                 )
             }}
           />
