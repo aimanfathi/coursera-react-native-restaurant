@@ -5,7 +5,6 @@ import { LEADERS } from '../shared/leaders';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
-import * as Animatable from 'react-native-animatable';
 
 
 const mapStateToProps = state => {
@@ -65,34 +64,31 @@ class About extends Component {
         else if (this.props.leaders.errMess) {
             return(
                 <ScrollView>
-                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
-                        <History />
-                        <Card>
-                            <Card.Title>Corporate Leadership</Card.Title>
-                            <Text>{this.props.leaders.errMess}</Text>
-                        </Card>
-                    </Animatable.View>
+                    <History />
+                    <Card>
+                        <Card.Title>Corporate Leadership</Card.Title>
+                        <Text>{this.props.leaders.errMess}</Text>
+                    </Card>
                 </ScrollView>
             );
         }
         else {
             return(
                 <ScrollView>
-                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
-                        <History />
-        
-                        <Card>
-                            <Card.Title>Corporate Leadership</Card.Title>
-                            <Card.Divider/>
-                            <View>
-                            <FlatList 
-                                data={this.props.leaders.leaders} 
-                                renderItem={renderLeader}
-                                keyExtractor={item => item.id.toString()}
-                            />
-                            </View>
-                        </Card>
-                    </Animatable.View>
+                    <History />
+    
+                    <Card>
+                        <Card.Title>Corporate Leadership</Card.Title>
+                        <Card.Divider/>
+                        <View>
+                        <FlatList 
+                            data={this.props.leaders.leaders} 
+                            renderItem={renderLeader}
+                            keyExtractor={item => item.id.toString()}
+                        />
+                        </View>
+                    </Card>
+                    
                 </ScrollView>
             );
         }
