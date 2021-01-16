@@ -1,6 +1,5 @@
 import React from 'react';
 import Main from './components/MainComponent';
-import Test from './components/Test';
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
