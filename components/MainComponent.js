@@ -7,6 +7,7 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import Reservation from './ReservationComponent';
 import Favorites from './FavoriteComponent';
+import Login from './LoginComponent';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator , DrawerContentScrollView , DrawerItemList  } from '@react-navigation/drawer';
@@ -215,6 +216,37 @@ function FavoritesNavigatorScreen({ navigation }) {
 }
 
 
+
+const LoginNavigator = createStackNavigator();
+
+function LoginNavigatorScreen({ navigation }) {
+  return(
+      <LoginNavigator.Navigator
+          screenOptions={{
+              headerStyle: {
+                  backgroundColor: "#512DA8"
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                  color: "#fff"            
+              }
+          }}
+      >
+          <LoginNavigator.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerLeft: ({ navigation }) => (
+                    <Icon name='menu' size={24} color='white'
+                        onPress={() => navigation.toggleDrawer()} />
+                ),
+              }} 
+          />        
+      </LoginNavigator.Navigator>
+  );
+}
+
+
 function CustomDrawerContentComponent(props) {
     return (
         <DrawerContentScrollView {...props}
@@ -249,6 +281,13 @@ function MainNavigator() {
         }}
         drawerContent={props => <CustomDrawerContentComponent  {...props} />}
         >
+          <Drawer.Screen name="Login" component={LoginNavigatorScreen}
+            options={{
+                drawerIcon: ({color}) => (
+                    <Icon name='sign-in' size={24} type='font-awesome' color={color}/>
+                )
+            }}
+          />
           <Drawer.Screen name="Home" component={HomeNavigatorScreen}
             options={{
                 drawerIcon: ({color}) => (

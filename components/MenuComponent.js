@@ -26,7 +26,7 @@ class Menu extends Component {
         const renderMenuItem = ({item, index}) => {
 
             return (
-                <Animatable.View animation="fadeInRightBig" duration={2000}>
+                <Animatable.View animation="fadeInRightBig" duration={2000} useNativeDriver={true}>
                     <Tile
                         key={index}
                         imageSrc={{uri: baseUrl + item.image}}

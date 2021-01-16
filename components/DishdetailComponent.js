@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text , ScrollView, FlatList, Modal, StyleSheet, Button, LogBox, Alert, PanResponder } from 'react-native';
+import { View, Text , ScrollView, FlatList, Modal, StyleSheet, Button, LogBox, Alert, PanResponder, Share } from 'react-native';
 import { Card , Icon, Rating, Input, colors } from 'react-native-elements';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
@@ -31,7 +31,16 @@ function RenderDish(props) {
     handleViewRef = ref => this.view=ref;
 
     const recognizeDrag = ({ moveX, moveY, dx, dy}) => {
-        if (dx < -200) {
+        if (dx < -150) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+    const recognizeComment = ({ moveX, moveY, dx, dy}) => {
+        if (dx > 150) {
             return true;
         }
         else {
@@ -64,39 +73,60 @@ function RenderDish(props) {
                         }
                     ],
                     {cancelable: false}
-                );
-                return true;
+                );   
             }
+            else if (recognizeComment(gestureState)) {
+                props.onPencilPress();                
+            }
+            return true;
         }
     });
+
+    const shareDish = (title, message, url) => {
+        Share.share({
+            title: title,
+            message: title + ': ' + message + ' ' + url,
+            url: url
+        }, {
+            dialogTitle: 'Share ' + title
+        });
+    };
 
 
     if (dish != null) {
         return(
-            <Animatable.View animation="fadeInDown" duration={2000} delay={1000}
-                ref={this.handleViewRef}
-                {...panResponder.panHandlers}
-            >
-            <Card>
-                <Card.Title>{dish.name}</Card.Title>
-                <Card.Image source={{uri: baseUrl + dish.image}} />
-                <Text style={{margin: 10}}>{dish.description}</Text>
-                <View style={styles.cardIcons}>
-                    <Icon raised reverse
-                        type='font-awesome' 
-                        color='#f50'
-                        name={props.favorites ? 'heart' : 'heart-o'}
-                        onPress={() => props.favorites ? alert('Already Favorite') : props.onPress()}
-                    />
-                    <Icon raised reverse
-                        type='font-awesome' 
-                        color='#512DA8'
-                        name='pencil'
-                        onPress={() => props.onPencilPress()}
-                    />
-                </View>
-            </Card>
-            </Animatable.View>
+            <ScrollView>
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}
+                    ref={this.handleViewRef}
+                    {...panResponder.panHandlers}
+                >
+                <Card>
+                    <Card.Title>{dish.name}</Card.Title>
+                    <Card.Image source={{uri: baseUrl + dish.image}} />
+                    <Text style={{margin: 10}}>{dish.description}</Text>
+                    <View style={styles.cardIcons}>
+                        <Icon raised reverse
+                            type='font-awesome' 
+                            color='#f50'
+                            name={props.favorites ? 'heart' : 'heart-o'}
+                            onPress={() => props.favorites ? alert('Already Favorite') : props.onPress()}
+                        />
+                        <Icon raised reverse
+                            type='font-awesome' 
+                            color='#512DA8'
+                            name='pencil'
+                            onPress={() => props.onPencilPress()}
+                        />
+                        <Icon raised reverse
+                            type='font-awesome' 
+                            color='#51D2A8'
+                            name='share'
+                            onPress={() => shareDish(dish.name, dish.description, baseUrl+dish.image)}
+                        />
+                    </View>
+                </Card>
+                </Animatable.View>
+            </ScrollView>
         );
     }
     else {
