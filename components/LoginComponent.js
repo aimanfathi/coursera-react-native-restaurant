@@ -124,31 +124,51 @@ class RegisterTab extends Component {
     }
 
 
-    getImagefromCamera = async () => {
+    getImageFromCamera = async () => {
         const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
         const cameraRollPermission = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
 
         if (cameraPermission.status === 'granted' && cameraRollPermission.status === 'granted') {
             let capturedImage = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
-                aspect: [4,3]
+                aspect: [4, 3],
             });
-
             if (!capturedImage.cancelled) {
+                console.log(capturedImage);
                 this.processImage(capturedImage.uri);
             }
         }
     }
 
 
-    processImage = async (imageUri) => {
-        let processedImage = await ImageManipulator.manipulateAsync({
-            imageUri,
-            actions: [{resize: {width: 400}}],
-            format: ImageManipulator.SaveFormat.PNG
-        });
+    getImagefromGallery = async () => {
+        const cameraRollPermission = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
 
-        this.setState({ imageUrl: processedImage.uri });
+        if (cameraRollPermission.status === 'granted') {
+            let selectedImage = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4,3]
+            });
+
+            if (!selectedImage.cancelled) {
+                console.log(selectedImage);
+                this.processImage(selectedImage.uri);
+            }
+        }
+    }
+
+
+    processImage = async (imageUri) => {
+        let processedImage = await ImageManipulator.manipulateAsync(
+            imageUri, 
+            [
+                {resize: {width: 400}}
+            ],
+            {format: ImageManipulator.SaveFormat.PNG}
+        );
+        console.log(processedImage);
+        this.setState({imageUrl: processedImage.uri });
+
     }
 
 
@@ -176,7 +196,11 @@ class RegisterTab extends Component {
                     />
                     <Button
                         title='Camera'
-                        onPress={this.getImagefromCamera}
+                        onPress={this.getImageFromCamera}
+                    />
+                    <Button
+                        title='Gallery'
+                        onPress={this.getImagefromGallery}
                     />
                 </View>
                 <Input
@@ -294,7 +318,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         flexDirection: 'row',
-        //margin: 20        
+        justifyContent: 'space-around'      
     },
     image: {
         //margin: 10,

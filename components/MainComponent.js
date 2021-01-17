@@ -14,6 +14,7 @@ import { createDrawerNavigator , DrawerContentScrollView , DrawerItemList  } fro
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { fetchDishes , fetchComments , fetchPromos , fetchLeaders } from '../redux/ActionCreators';
+import NetInfo from "@react-native-community/netinfo";
 
 
 const mapStateToProps = state => {
@@ -337,12 +338,51 @@ function MainNavigator() {
 
 
 class Main extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            unsubscribe: null
+        };
+    }
     
     componentDidMount() {
         this.props.fetchDishes();
         this.props.fetchComments();
         this.props.fetchPromos();
         this.props.fetchLeaders();
+
+        NetInfo.fetch()
+                .then((connectionInfo) => {
+                    console.log('Initial Network Connectivity Type: ' + connectionInfo.type);
+                })
+                .catch(e => console.log(e));
+        
+        this.state.unsubscribe = () => NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+    }
+
+    componentWillUnmount() {
+        this.state.unsubscribe;
+    }
+
+
+    handleConnectivityChange = (connectionInfo) => {
+        switch (connectionInfo.type){
+            case 'none':
+                alert('You are now offline');
+                break;
+            case 'wifi':
+                alert('You are now connected to WiFi');
+                break;
+            case 'cellular':
+                alert('You are now connected to Cellular');
+                break;
+            case 'unknown':
+                alert('You now have unknown connection');
+                break;
+            default:
+                break;
+        }
     }
 
     render() { 

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Text , View , ScrollView , StyleSheet , Switch , Button , Modal, Alert } from 'react-native';
+import { Text , View , ScrollView , StyleSheet , Switch , Button , Modal, Alert, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
 import * as Permissions from 'expo-permissions';
 import * as Notifications from 'expo-notifications';
+import * as Calendar from 'expo-calendar';
 
 
 class Reservation extends Component {
@@ -56,7 +57,8 @@ class Reservation extends Component {
                     text: 'OK',
                     onPress: () => {
                         this.presentLocalNotification(notifyDate)
-                        .catch(e => console.log(e));                       
+                            .then(this.addReservationToCalendar(notifyDate))
+                            .catch(e => console.log(e));                       
                     },
                     style: 'default'
                 }
@@ -103,6 +105,48 @@ class Reservation extends Component {
             console.log('Notification permission not granted');
         }
         
+    }
+
+
+    async obtainCalendarPermission() {
+        let permission = await Permissions.getAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+            let permission = await Permissions.askAsync(Permissions.CALENDAR);
+            if (permission.status !== 'granted') {
+                alert('Permission not granted to calendar');
+            }
+        }
+        //console.log('Permission: ' + JSON.stringify(permission));
+        return permission;
+    }
+
+
+    async addReservationToCalendar(date) {
+        let calendarPermission = await this.obtainCalendarPermission();
+        //console.log('calendarPermission: ' + JSON.stringify(calendarPermission));
+
+        //const defaultCalendar = await Calendar.getDefaultCalendarAsync(); iOS only
+        // This works for all iOS and Android
+        const entityType = Platform.OS === 'ios' ? Calendar.EntityTypes.EVENT : null;
+        const calendars = await Calendar.getCalendarsAsync(entityType);
+        const defaultCalendar = calendars.filter(each => each.source.name === 'Default')[0];
+    
+        if (calendarPermission.status === 'granted') {
+            let eventID = await Calendar.createEventAsync(
+                defaultCalendar.id, {
+                title: 'ConFusion Reservation',
+                startDate: new Date(Date.parse(date)),
+                endDate: new Date(Date.parse(date) + (2*60*60*1000)),
+                location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong',
+                timeZone: 'Asia/Hong_Kong'
+            });
+            if (eventID) {
+                console.log('Event ID: ' + eventID);
+            }
+        }
+        else {
+            console.log('Calendar permission not granted');
+        }
     }
 
 
